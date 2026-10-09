@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>Test Pattern Resolume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: consola de regiduría con identidad ISAACRAMIREZD AV DESIGN — panel a la izquierda, monitor de salida a la derecha. Tema oscuro fijo a propósito (entorno de control de vídeo), negro de marca y escala de naranjas de los faders. */
+:root{
+  --bg:#121111; --panel:#1a1918; --panel2:#232120; --line:#353130; --fg:#f4f1ee; --muted:#a19a94;
+  --accent:#F39320; --accent-ink:#141210; --sel:#FBCB78; --danger:#ff6b5b; --ok:#9bd88f;
+  --d1:#D35F1A; --d2:#E2701C; --d3:#F39320; --d4:#F8B133; --d5:#FBCB78;
+  --f-display:"Montserrat","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-body);font-size:13.5px;line-height:1.5;padding-inline:16px;padding-block:0 24px}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;padding-block:22px 18px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.lockup{display:flex;flex-direction:column;gap:6px;min-width:0}
+.wordmark{font-family:var(--f-display);font-weight:200;font-size:clamp(21px,3vw,32px);letter-spacing:.07em;line-height:1;white-space:nowrap;margin:0}
+.wordmark svg{display:inline-block;vertical-align:baseline;height:.72em;width:auto;color:var(--accent);stroke-width:13;margin-inline:.01em .04em}
+.av{display:flex;align-items:center;gap:12px}
+.av b{font-weight:800;font-size:clamp(13px,1.7vw,17px);letter-spacing:.08em;white-space:nowrap}
+.av .faders{flex:1;min-width:70px;max-width:180px;height:22px}
+.toolname{display:flex;flex-direction:column;gap:3px;border-left:1px solid var(--line);padding-left:22px;min-width:0}
+.toolname small{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.toolname h1{margin:0;font-size:19px;font-weight:600;letter-spacing:.01em;text-wrap:balance}
+.toolname h1 span{color:var(--accent)}
+.top .seg{margin-left:auto}
+@media (max-width:640px){.toolname{border-left:0;padding-left:0}.top .seg{margin-left:0}}
+
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;padding:8px 16px;border-radius:999px;cursor:pointer;font-family:var(--f-display);font-size:11.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg.small button{font-size:10.5px;padding:7px 12px}
+
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;height:22px;width:100%;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:var(--line);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);margin-top:-5.5px;border:0}
+input[type=range]::-moz-range-track{height:4px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--accent);border:0}
+.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase}
+.foot b{color:var(--fg);font-weight:800}
+.foot span.o{color:var(--accent)}
+
+.app{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.app{grid-template-columns:minmax(0,1fr)}.stage{order:-1}}
+
+.side{display:flex;flex-direction:column;gap:10px;min-width:0}
+details.box{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+details.box>summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;gap:10px;align-items:center;font-family:var(--f-display);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
+details.box>summary::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--dot,var(--accent));flex:none}
+.side details.box:nth-child(1){--dot:var(--d1)} .side details.box:nth-child(2){--dot:var(--d2)} .side details.box:nth-child(3){--dot:var(--d3)} .side details.box:nth-child(4){--dot:var(--d4)} .side details.box:nth-child(5){--dot:var(--d5)}
+details.box>summary .unit{letter-spacing:0;text-transform:none;font-weight:400}
+details.box>summary::-webkit-details-marker{display:none}
+details.box>summary::after{content:"+";color:var(--muted);font-family:var(--f-mono);font-size:15px;margin-left:auto}
+details.box[open]>summary::after{content:"−"}
+.boxbody{padding:2px 14px 14px;display:flex;flex-direction:column;gap:12px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+label.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);min-width:0}
+label.f input,label.f select{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:0;font-family:var(--f-mono);font-size:13px;color:var(--fg)}
+label.f input[type=text]{font-family:var(--f-body);font-size:14px}
+.unit{color:var(--muted);font-size:11px;font-family:var(--f-mono)}
+.hint{color:var(--muted);font-size:12.5px;margin:0}
+.hint b{color:var(--fg);font-weight:600}
+
+.btn{border:1px solid var(--line);background:var(--panel2);border-radius:7px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent}
+.btn.tiny{padding:4px 8px;font-size:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+.drop{border:1.5px dashed var(--line);border-radius:8px;padding:14px;text-align:center;cursor:pointer;color:var(--muted);font-size:13px;background:var(--panel2)}
+.drop.over{border-color:var(--accent);color:var(--fg)}
+.drop strong{color:var(--fg);display:block;font-size:14px;margin-bottom:2px}
+
+.check{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.range{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.range .lbl{display:flex;justify-content:space-between}
+.range .lbl output{font-family:var(--f-mono);color:var(--fg)}
+.range input{accent-color:var(--accent);width:100%}
+
+.slices{display:flex;flex-direction:column;gap:8px;max-height:460px;overflow:auto;padding-right:2px}
+.slice{border:1px solid var(--line);border-radius:8px;background:var(--panel2);padding:8px;display:flex;flex-direction:column;gap:6px}
+.slice.sel{border-color:var(--sel);box-shadow:0 0 0 1px var(--sel) inset}
+.slice .head{display:flex;gap:6px;align-items:center}
+.slice .sw{width:12px;height:28px;border-radius:3px;flex:none}
+.slice .head input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-weight:600}
+.slice .meta{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.slice .meta .warn{color:var(--accent)}
+.slice label.f input{background:var(--panel);padding:4px 6px;font-size:12px}
+.iconbtn{border:1px solid var(--line);background:transparent;border-radius:6px;width:28px;height:28px;cursor:pointer;color:var(--muted);flex:none;font-size:14px}
+.iconbtn:hover{color:var(--fg);border-color:var(--muted)}
+.iconbtn.del:hover{color:var(--danger);border-color:var(--danger)}
+
+.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:10px;min-width:0}
+@media (max-width:900px){.stage{position:static}}
+.monitor{background:#000;border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}
+.monhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.monhead .live{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+.canvwrap{position:relative;width:100%;line-height:0;background:repeating-conic-gradient(#0b0b0b 0 25%,#060606 0 50%) 0 0/16px 16px}
+#cv{width:100%;height:auto;display:block}
+#ov{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.transport{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.transport input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.tc{font-family:var(--f-mono);font-size:13px;min-width:110px;text-align:right;font-variant-numeric:tabular-nums}
+.status{font-size:13px;color:var(--muted);min-height:20px}
+.status.err{color:var(--danger)}
+.status.okk{color:var(--ok)}
+.export{display:flex;flex-direction:column;gap:10px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:8px;font-size:13.5px;z-index:10;max-width:calc(100% - 32px)}
+.recbar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.recbar i{display:block;height:100%;width:0;background:var(--danger)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clipPath id="aaclip"><rect x="-10" y="-20" width="450" height="302"/></clipPath>
+    <symbol id="aa" viewBox="-6 0 432 284">
+      <g clip-path="url(#aaclip)" fill="none" stroke="currentColor" stroke-linejoin="bevel">
+        <polyline points="1,300 145,10 287,300"/>
+        <polyline points="133,300 275,10 418,300"/>
+        <line x1="30" y1="230" x2="390" y2="230"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+<header class="top">
+  <div class="lockup" role="img" aria-label="ISAACRAMIREZD AV DESIGN">
+    <p class="wordmark">IS<svg viewBox="-6 0 432 284"><use href="#aa"/></svg>CRAMIREZD</p>
+    <div class="av">
+      <b>AV DESIGN</b>
+      <svg class="faders" id="faders" viewBox="0 0 120 22" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2" style="color:var(--fg)"><line x1="6" y1="2" x2="6" y2="20"/><line x1="33" y1="2" x2="33" y2="20"/><line x1="60" y1="2" x2="60" y2="20"/><line x1="87" y1="2" x2="87" y2="20"/><line x1="114" y1="2" x2="114" y2="20"/></g>
+        <circle cx="6" cy="14" r="3.6" fill="#D35F1A"/><circle cx="33" cy="6" r="3.6" fill="#E2701C"/><circle cx="60" cy="18" r="3.6" fill="#F39320"/><circle cx="87" cy="10" r="3.6" fill="#F8B133"/><circle cx="114" cy="4" r="3.6" fill="#FBCB78"/>
+      </svg>
+    </div>
+  </div>
+  <div class="toolname">
+    <small>Herramienta LED</small>
+    <h1>Test Pattern <span>Resolume</span></h1>
+  </div>
+  <div class="seg" role="group" aria-label="Modo de patrón">
+    <button id="mNormal" aria-pressed="true">Normal</button>
+    <button id="mFun" aria-pressed="false">Divertido</button>
+  </div>
+</header>
+
+<main class="app">
+  <aside class="side">
+
+    <details class="box" open>
+      <summary>Origen de las slices</summary>
+      <div class="boxbody">
+        <div class="seg small" role="group" aria-label="Origen">
+          <button id="srcSvg" aria-pressed="false">Input map (SVG)</button>
+          <button id="srcBuild" aria-pressed="true">Construir output</button>
+        </div>
+
+        <div id="paneSvg" hidden>
+          <div class="drop" id="dropSvg" tabindex="0" role="button">
+            <strong>Cargar SVG del input map</strong>
+            Arrastra aquí el archivo o haz clic
+          </div>
+          <input type="file" id="fileSvg" accept=".svg,image/svg+xml" hidden>
+          <p class="hint" style="margin-top:10px">Cada rectángulo o forma del SVG se convierte en una slice. Indica en cada slice cuántos <b>módulos</b> tiene en la pantalla real (columnas × filas): si no coincide con su tamaño en el input, el patrón se deforma para que en el output los módulos salgan cuadrados y a escala.</p>
+        </div>
+
+        <div id="paneBuild" class="export">
+          <p class="hint">Añade pantallas por número de módulos. El tamaño en píxeles sale del tamaño de módulo. Arrastra las slices en el monitor para colocarlas.</p>
+          <div class="grid2">
+            <label class="f" style="grid-column:1/-1">Nombre<input type="text" id="addName" value="Pantalla nueva"></label>
+            <label class="f">Columnas (módulos)<input type="number" id="addCols" value="4" min="1"></label>
+            <label class="f">Filas (módulos)<input type="number" id="addRows" value="3" min="1"></label>
+          </div>
+          <div class="row">
+            <button class="btn primary" id="addSlice">Añadir pantalla</button>
+            <button class="btn" id="fitComp">Ajustar composición</button>
+          </div>
+          <button class="btn" id="dlSvg">Descargar SVG de output</button>
+        </div>
+      </div>
+    </details>
+
+    <details class="box" open>
+      <summary>Composición y módulos</summary>
+      <div class="boxbody">
+        <div class="grid2">
+          <label class="f">Ancho composición <span class="unit">px</span><input type="number" id="compW" min="16"></label>
+          <label class="f">Alto composición <span class="unit">px</span><input type="number" id="compH" min="16"></label>
+          <label class="f">Ancho módulo <span class="unit">px</span><input type="number" id="modW" min="2"></label>
+          <label class="f">Alto módulo <span class="unit">px</span><input type="number" id="modH" min="2"></label>
+          <label class="f">Ancho módulo <span class="unit">m</span><input type="number" id="modMW" step="0.01" min="0.01"></label>
+          <label class="f">Alto módulo <span class="unit">m</span><input type="number" id="modMH" step="0.01" min="0.01"></label>
+        </div>
+        <label class="check"><input type="checkbox" id="snap"> Imán a la rejilla de módulos al arrastrar</label>
+      </div>
+    </details>
+
+    <details class="box" open>
+      <summary>Slices <span id="sliceCount" class="unit"></span></summary>
+      <div class="boxbody">
+        <div class="slices" id="sliceList"></div>
+      </div>
+    </details>
+
+    <details class="box" open>
+      <summary>Patrón</summary>
+      <div class="boxbody">
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="oGrid"> Módulos</label>
+          <label class="check"><input type="checkbox" id="oNums"> Numerar módulos</label>
+          <label class="check"><input type="checkbox" id="oDiag"> Diagonales</label>
+          <label class="check"><input type="checkbox" id="oCircle"> Círculo</label>
+          <label class="check"><input type="checkbox" id="oInfo"> Info de medidas</label>
+          <label class="check"><input type="checkbox" id="oSweep"> Barra en movimiento</label>
+        </div>
+        <div class="range"><span class="lbl">Tamaño del nombre <output id="nameSizeO"></output></span><input type="range" id="nameSize" min="4" max="40"></div>
+        <div class="drop" id="dropLogo" tabindex="0" role="button">
+          <strong id="logoTitle">Añadir logo</strong>
+          <span id="logoSub">JPG, PNG o GIF animado · aparece en el centro de cada slice</span>
+        </div>
+        <input type="file" id="fileLogo" accept="image/png,image/jpeg,image/gif" hidden>
+        <div class="row"><span class="hint">Monograma AA:</span>
+          <button class="btn tiny" id="aaOrange"><span style="color:var(--accent)">●</span> Naranja</button>
+          <button class="btn tiny" id="aaWhite"><span style="color:#fff">●</span> Blanco</button>
+        </div>
+        <div class="range"><span class="lbl">Tamaño del logo <output id="logoSizeO"></output></span><input type="range" id="logoSize" min="5" max="90"></div>
+        <button class="btn tiny ghost" id="rmLogo" hidden>Quitar logo</button>
+      </div>
+    </details>
+
+    <details class="box" open>
+      <summary>Modo divertido</summary>
+      <div class="boxbody">
+        <p class="hint">Empieza en negro y un duende obrero va montando los módulos uno a uno, a escala con las medidas reales (en metros) que hayas puesto. Al terminar aparece el patrón completo.</p>
+        <div class="grid2">
+          <label class="f">Duración <span class="unit">s</span><input type="number" id="funDur" min="8" max="600"></label>
+          <label class="check" style="align-self:end;padding-bottom:6px"><input type="checkbox" id="hud"> Contador de módulos</label>
+        </div>
+      </div>
+    </details>
+  </aside>
+
+  <section class="stage">
+    <div class="monitor">
+      <div class="monhead">
+        <span class="live"><span class="dot" id="recDot"></span><span id="monLabel">OUTPUT</span></span>
+        <span id="compLabel"></span>
+      </div>
+      <div class="canvwrap" id="wrap">
+        <canvas id="cv" width="1920" height="1080"></canvas>
+        <canvas id="ov"></canvas>
+      </div>
+    </div>
+    <div class="transport">
+      <button class="btn" id="play" aria-label="Reproducir">▶ Reproducir</button>
+      <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Posición">
+      <span class="tc" id="tc">00:00.0 / 00:10</span>
+      <button class="btn ghost" id="fs">Pantalla completa</button>
+    </div>
+    <div class="recbar" id="recbar" hidden><i id="recfill"></i></div>
+
+    <details class="box" open>
+      <summary>Exportar</summary>
+      <div class="boxbody">
+        <div class="grid2">
+          <label class="f">Duración vídeo normal <span class="unit">s</span><input type="number" id="videoDur" min="1" max="600"></label>
+          <label class="f">Fotogramas por segundo<select id="fps"><option>25</option><option>30</option><option>50</option><option>60</option></select></label>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="recVideo">Generar vídeo</button>
+          <button class="btn" id="dlPng">Imagen PNG</button>
+          <button class="btn" id="dlSvg2">SVG de output</button>
+        </div>
+        <p class="hint">El vídeo se graba en tiempo real: deja esta pestaña visible mientras se genera. Si tu navegador solo exporta WebM, pásalo por Alley para convertirlo a DXV antes de usarlo en Resolume.</p>
+        <div class="status" id="status"></div>
+      </div>
+    </details>
+  </section>
+</main>
+<footer class="foot"><span><b>ISAACRAMIREZD</b> · AV DESIGN</span><span>Test Pattern <span class="o">Resolume</span></span></footer>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const KEY = 'tpr-state-v1';
+const DEF = {
+  compW:1920, compH:1080, modW:128, modH:128, modMW:0.5, modMH:0.5,
+  source:'build', mode:'normal', snap:true,
+  grid:true, nums:true, diag:true, circle:true, info:true, sweep:true,
+  nameSize:14, logoSize:30, funDur:30, videoDur:10, fps:30, hud:true,
+  slices:[
+    {name:'Pantalla central', x:448, y:136, cols:8, rows:5, lock:true},
+    {name:'Lateral izquierdo', x:64, y:136, cols:2, rows:6, lock:true},
+    {name:'Lateral derecho', x:1600, y:136, cols:2, rows:6, lock:true},
+    {name:'Frontal escenario', x:192, y:920, cols:12, rows:1, lock:true}
+  ]
+};
+let S;
+try { S = Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { S = structuredClone(DEF); }
+const R = { t:0, playing:false, logo:null, sel:-1, dirty:true, cacheDirty:true, recording:false };
+
+const cv = $('#cv'), ctx = cv.getContext('2d');
+const ov = $('#ov'), octx = ov.getContext('2d');
+const cache = document.createElement('canvas'), cctx = cache.getContext('2d');
+let jobs = [];
+
+/* ---------- utilidades ---------- */
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const ease = p => p<.5 ? 2*p*p : 1 - Math.pow(-2*p+2,2)/2;
+const fmt = (n,d=2) => n.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const HUES = [200, 32, 145, 280, 355, 55, 175, 315, 95, 240, 15, 260];
+const hue = i => HUES[i % HUES.length] + Math.floor(i / HUES.length) * 11;
+function hslHex(h,s,l){ s/=100; l/=100; const k=n=>(n+h/30)%12, a=s*Math.min(l,1-l); const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1))); return '#'+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join(''); }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+let saveT; function persist(){ clearTimeout(saveT); saveT = setTimeout(()=>{ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch{} }, 300); }
+function changed(structural){ R.cacheDirty = true; R.dirty = true; persist(); if (structural) renderList(); updateLabels(); }
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 3200); }
+function status(msg, cls=''){ const el=$('#status'); el.textContent=msg; el.className='status '+cls; }
+
+function syncSlice(s){
+  s.cols = Math.max(1, Math.round(s.cols||1)); s.rows = Math.max(1, Math.round(s.rows||1));
+  if (s.lock){ s.w = s.cols*S.modW; s.h = s.rows*S.modH; }
+  return { ow: s.cols*S.modW, oh: s.rows*S.modH };
+}
+
+/* ---------- logo (incluye GIF animado) ---------- */
+function logoFrame(t){
+  const L = R.logo; if (!L) return null;
+  if (L.frames && L.frames.length){
+    if (L.frames.length === 1) return L.frames[0].bmp;
+    let ms = (t*1000) % L.total, acc = 0;
+    for (const f of L.frames){ acc += f.dur; if (ms < acc) return f.bmp; }
+    return L.frames[L.frames.length-1].bmp;
+  }
+  return L.img;
+}
+async function loadLogo(file){
+  if (!/^image\/(png|jpeg|gif)$/.test(file.type)) { toast('El logo tiene que ser JPG, PNG o GIF'); return; }
+  const url = URL.createObjectURL(file);
+  const img = new Image(); img.src = url; await img.decode().catch(()=>{});
+  const L = { img, name:file.name, w:img.naturalWidth, h:img.naturalHeight, frames:null, total:0 };
+  if (file.type === 'image/gif' && 'ImageDecoder' in window){
+    try{
+      const dec = new ImageDecoder({ data: await file.arrayBuffer(), type:'image/gif' });
+      await dec.tracks.ready;
+      const n = dec.tracks.selectedTrack.frameCount, frames = [];
+      for (let i=0;i<n;i++){
+        const r = await dec.decode({frameIndex:i});
+        const dur = Math.max(20, (r.image.duration || 100000)/1000);
+        frames.push({ bmp: await createImageBitmap(r.image), dur }); r.image.close();
+      }
+      L.frames = frames; L.total = frames.reduce((a,f)=>a+f.dur,0);
+    }catch(e){ console.warn(e); }
+  }
+  R.logo = L;
+  $('#logoTitle').textContent = file.name;
+  $('#logoSub').textContent = L.frames && L.frames.length>1 ? `GIF animado · ${L.frames.length} fotogramas` : (file.type==='image/gif' ? 'GIF (este navegador solo muestra el primer fotograma)' : `${L.w}×${L.h} px`);
+  $('#rmLogo').hidden = false;
+  changed(false);
+}
+
+/* ---------- dibujo del patrón ---------- */
+const FONT_D = '"Montserrat","Helvetica Neue",Arial,sans-serif';
+const FONT_M = '"JetBrains Mono",ui-monospace,monospace';
+
+function drawSlice(c, s, i, t, live){
+  const { ow, oh } = syncSlice(s);
+  const H = hue(i);
+  c.save();
+  c.translate(s.x, s.y); c.scale(s.w/ow, s.h/oh);
+  c.beginPath(); c.rect(0,0,ow,oh); c.clip();
+  c.fillStyle = `hsl(${H} 45% 15%)`; c.fillRect(0,0,ow,oh);
+  const mw = S.modW, mh = S.modH, ms = Math.min(mw,mh);
+  if (S.grid){
+    c.fillStyle = `hsl(${H} 50% 23%)`;
+    for (let r=0;r<s.rows;r++) for (let k=0;k<s.cols;k++) if ((r+k)%2) c.fillRect(k*mw, r*mh, mw, mh);
+    c.strokeStyle = `hsl(${H} 85% 62%)`; c.lineWidth = Math.max(1, ms*0.02);
+    c.beginPath();
+    for (let k=1;k<s.cols;k++){ c.moveTo(k*mw,0); c.lineTo(k*mw,oh); }
+    for (let r=1;r<s.rows;r++){ c.moveTo(0,r*mh); c.lineTo(ow,r*mh); }
+    c.stroke();
+    if (S.nums && ms >= 36){
+      c.fillStyle = 'rgba(255,255,255,.55)'; c.font = `500 ${Math.round(ms*0.15)}px ${FONT_M}`;
+      c.textAlign='left'; c.textBaseline='top';
+      for (let r=0;r<s.rows;r++) for (let k=0;k<s.cols;k++) c.fillText(`${k+1}.${r+1}`, k*mw+ms*0.07, r*mh+ms*0.07);
+    }
+  }
+  const lw = Math.max(1.5, Math.min(ow,oh)*0.006);
+  if (S.diag){ c.strokeStyle='rgba(255,255,255,.32)'; c.lineWidth=lw; c.beginPath(); c.moveTo(0,0); c.lineTo(ow,oh); c.moveTo(ow,0); c.lineTo(0,oh); c.stroke(); }
+  if (S.circle){ c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=lw; c.beginPath(); c.arc(ow/2,oh/2,Math.min(ow,oh)/2-lw,0,Math.PI*2); c.stroke(); }
+  if (live && S.sweep){
+    const p = (t/2.5) % 1, bw = Math.max(3, ow*0.012);
+    c.fillStyle='rgba(255,255,255,.85)'; c.fillRect(p*(ow+bw)-bw, 0, bw, oh);
+  }
+  const bl = Math.max(2, Math.min(ow,oh)*0.012);
+  c.strokeStyle = `hsl(${H} 90% 66%)`; c.lineWidth = bl*2; c.strokeRect(0,0,ow,oh);
+
+  // grupo central: logo + nombre + info
+  const B = Math.max(Math.min(ow,oh), 0.6*Math.sqrt(ow*oh));
+  const img = logoFrame(t);
+  let lw2=0, lh2=0;
+  if (img && R.logo){ const box = S.logoSize/100*B, ar = R.logo.w/R.logo.h; if (ar>=1){ lw2=box; lh2=box/ar; } else { lh2=box; lw2=box*ar; } }
+  let nz = S.nameSize/100*B, iz = S.info ? nz*0.34 : 0;
+  const infoTxt = `${ow}×${oh} px · ${s.cols}×${s.rows} mód · ${fmt(s.cols*S.modMW)}×${fmt(s.rows*S.modMH)} m`;
+  c.font = `800 ${nz}px ${FONT_D}`; let nw = c.measureText(s.name).width;
+  c.font = `500 ${iz}px ${FONT_M}`; let iw = iz ? c.measureText(infoTxt).width : 0;
+  let gap = nz*0.22;
+  let total = lh2 + (lh2?gap:0) + nz*1.05 + (iz? gap*0.6 + iz*1.2 : 0);
+  let f = Math.min(1, 0.9*oh/total, 0.9*ow/Math.max(nw, iw, lw2, 1));
+  nz*=f; iz*=f; lw2*=f; lh2*=f; gap*=f; nw*=f; iw*=f; total*=f;
+  let y = oh/2 - total/2;
+  if (img && lh2){ c.drawImage(img, ow/2-lw2/2, y, lw2, lh2); y += lh2 + gap; }
+  const plateW = Math.max(nw, iw) + nz*0.6, plateH = nz*1.05 + (iz? gap*0.6 + iz*1.2 : 0) + nz*0.2;
+  c.fillStyle='rgba(0,0,0,.6)';
+  roundRect(c, ow/2-plateW/2, y - nz*0.1, plateW, plateH, nz*0.15); c.fill();
+  c.textAlign='center'; c.textBaseline='middle'; c.fillStyle='#fff';
+  c.font = `800 ${nz}px ${FONT_D}`; c.fillText(s.name, ow/2, y + nz*0.52);
+  if (iz){ c.font = `500 ${iz}px ${FONT_M}`; c.fillStyle = `hsl(${H} 90% 75%)`; c.fillText(infoTxt, ow/2, y + nz*1.05 + gap*0.6 + iz*0.6); }
+  c.restore();
+}
+function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+
+function renderNormal(c, t, live){
+  c.fillStyle='#000'; c.fillRect(0,0,S.compW,S.compH);
+  S.slices.forEach((s,i)=>drawSlice(c,s,i,t,live));
+}
+
+function buildCache(){
+  cache.width = S.compW; cache.height = S.compH;
+  renderNormal(cctx, 0, false);
+  jobs = [];
+  S.slices.forEach((s,si)=>{
+    syncSlice(s);
+    const cw = s.w/s.cols, ch = s.h/s.rows;
+    let pass = 0;
+    for (let r=s.rows-1;r>=0;r--,pass++){
+      const dir = pass%2===0 ? 1 : -1;
+      for (let j=0;j<s.cols;j++){
+        const k = dir>0 ? j : s.cols-1-j;
+        const x = s.x + k*cw, y = s.y + r*ch;
+        const H = clamp(0.9/S.modMH*ch, S.compH*0.07, S.compH*0.35);
+        jobs.push({ si, x, y, w:cw, h:ch, dir, H, ground: s.y+s.h, gx: x + cw/2 - dir*(cw*0.5 + H*0.1), gy: y+ch });
+      }
+    }
+  });
+  R.cacheDirty = false;
+}
+
+/* ---------- el duende ---------- */
+function drawGoblin(c, x, y, H, dir, o){
+  c.save(); c.translate(x,y); c.scale(dir*H/100, H/100);
+  c.lineCap='round'; c.lineJoin='round';
+  const sw = o.walking ? Math.sin(o.phase) : 0;
+  const bob = o.walking ? -Math.abs(Math.cos(o.phase))*3 : (o.jump||0);
+  const leg = (px, ang, col) => { c.save(); c.translate(px, -36+bob); c.rotate(ang);
+    c.fillStyle=col; roundRect(c,-5,0,10,26,3); c.fill();
+    c.fillStyle='#5a3a1e'; roundRect(c,-6,22,17,9,4); c.fill(); c.restore(); };
+  leg(-3, -sw*0.6, '#24498c');
+  const skin='#7cc95a', skinD='#62ad42';
+  const armDown = (px, ang) => { c.save(); c.translate(px,-63+bob); c.rotate(ang);
+    c.strokeStyle='#ff7a1a'; c.lineWidth=9; c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke();
+    c.strokeStyle=skin; c.lineWidth=7; c.beginPath(); c.moveTo(0,8); c.lineTo(0,22); c.stroke();
+    c.fillStyle=skin; c.beginPath(); c.arc(0,24,4.5,0,7); c.fill(); c.restore(); };
+  const armUp = (sx, hx) => { c.strokeStyle='#ff7a1a'; c.lineWidth=9; c.beginPath(); c.moveTo(sx,-63+bob); c.lineTo(sx+(hx-sx)*0.3,-74+bob); c.stroke();
+    c.strokeStyle=skin; c.lineWidth=7; c.beginPath(); c.moveTo(sx+(hx-sx)*0.3,-74+bob); c.lineTo(hx,-103+bob); c.stroke();
+    c.fillStyle=skin; c.beginPath(); c.arc(hx,-104+bob,4.5,0,7); c.fill(); };
+  if (o.armsUp) armUp(-9,-15); else armDown(-4, sw*0.7);
+  leg(3, sw*0.6, '#2f5fb0');
+  // torso
+  c.fillStyle='#ff7a1a'; roundRect(c,-15,-68+bob,30,34,7); c.fill();
+  c.fillStyle='#dfe4ec'; c.fillRect(-15,-56+bob,30,3.5); c.fillRect(-15,-47+bob,30,3.5);
+  c.fillStyle='#d95e0a'; c.fillRect(-1,-68+bob,2,30);
+  c.fillStyle='#3b2a1a'; c.fillRect(-15,-38+bob,30,4);
+  // orejas
+  c.fillStyle=skinD;
+  c.beginPath(); c.moveTo(-8,-84+bob); c.lineTo(-31,-93+bob); c.lineTo(-9,-74+bob); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(8,-87+bob); c.lineTo(22,-99+bob); c.lineTo(13,-79+bob); c.closePath(); c.fill();
+  // cabeza
+  c.fillStyle=skin; c.beginPath(); c.arc(2,-80+bob,15,0,7); c.fill();
+  c.fillStyle=skinD; c.beginPath(); c.ellipse(17,-77+bob,6.5,4.5,0.2,0,7); c.fill();
+  c.fillStyle='#fff'; c.beginPath(); c.ellipse(8,-83+bob,4,4.6,0,0,7); c.fill(); c.beginPath(); c.ellipse(-1,-83+bob,3.4,4.2,0,0,7); c.fill();
+  c.fillStyle='#111'; c.beginPath(); c.arc(9.5,-82.5+bob,2.1,0,7); c.fill(); c.beginPath(); c.arc(0.4,-82.5+bob,1.9,0,7); c.fill();
+  c.strokeStyle='#2a4a1a'; c.lineWidth=1.8; c.beginPath(); c.moveTo(2,-72+bob); c.quadraticCurveTo(9,(o.happy?-65:-68)+bob,14,-72+bob); c.stroke();
+  // casco
+  c.fillStyle='#ffd21f'; c.beginPath(); c.arc(2,-85+bob,16.5,Math.PI,0); c.closePath(); c.fill();
+  c.fillRect(-16,-87+bob,40,4);
+  c.strokeStyle='#e0b000'; c.lineWidth=3; c.beginPath(); c.moveTo(2,-100+bob); c.lineTo(2,-89+bob); c.stroke();
+  // brazo delantero
+  if (o.armsUp) armUp(10,16);
+  else if (o.wave){ c.save(); c.translate(8,-63+bob); c.rotate(Math.PI - 0.5 + Math.sin(o.wave*10)*0.45);
+    c.strokeStyle='#ff7a1a'; c.lineWidth=9; c.beginPath(); c.moveTo(0,0); c.lineTo(0,8); c.stroke();
+    c.strokeStyle=skin; c.lineWidth=7; c.beginPath(); c.moveTo(0,8); c.lineTo(0,22); c.stroke();
+    c.fillStyle=skin; c.beginPath(); c.arc(0,24,5,0,7); c.fill(); c.restore(); }
+  else armDown(6, -sw*0.7);
+  c.restore();
+}
+function drawLift(c, x, feet, ground, H){
+  const hgt = ground - feet; if (hgt < H*0.04) return;
+  const w = H*0.55, x0 = x-w/2, n = Math.max(1, Math.round(hgt/(H*0.35))), seg = (hgt - H*0.08)/n;
+  c.save();
+  c.strokeStyle='#e8b10c'; c.lineWidth=Math.max(1.5,H*0.025);
+  c.beginPath();
+  for (let i=0;i<n;i++){ const ya = feet + H*0.04 + i*seg, yb = ya+seg; c.moveTo(x0,ya); c.lineTo(x0+w,yb); c.moveTo(x0+w,ya); c.lineTo(x0,yb); }
+  c.stroke();
+  c.fillStyle='#ffc12e'; c.fillRect(x0-H*0.04, feet, w+H*0.08, H*0.04);
+  c.fillStyle='#3a3f4b'; c.fillRect(x0-H*0.05, ground-H*0.07, w+H*0.1, H*0.05);
+  c.fillStyle='#111'; c.beginPath(); c.arc(x0+H*0.02, ground-H*0.02, H*0.025, 0, 7); c.arc(x0+w-H*0.02, ground-H*0.02, H*0.025, 0, 7); c.fill();
+  c.restore();
+}
+function drawPanel(c, j, rx, ry, rw, rh){
+  c.drawImage(cache, j.x, j.y, j.w, j.h, rx, ry, rw, rh);
+  c.strokeStyle='#2b2f38'; c.lineWidth=Math.max(1.5, rw*0.04); c.strokeRect(rx,ry,rw,rh);
+}
+function bubble(c, x, y, txt, sz){
+  c.save(); c.font = `700 ${sz}px ${FONT_D}`; const w = c.measureText(txt).width + sz*0.9, h = sz*1.5;
+  const bx = clamp(x - w/2, 4, S.compW - w - 4), by = Math.max(4, y - h - sz*0.5);
+  c.fillStyle='#fff'; roundRect(c,bx,by,w,h,sz*0.35); c.fill();
+  c.beginPath(); c.moveTo(clamp(x,bx+sz*0.4,bx+w-sz*0.4)-sz*0.3, by+h-1); c.lineTo(x, by+h+sz*0.45); c.lineTo(clamp(x,bx+sz*0.4,bx+w-sz*0.4)+sz*0.3, by+h-1); c.fill();
+  c.fillStyle='#111'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt, bx+w/2, by+h/2+1); c.restore();
+}
+
+function renderFun(c, t){
+  c.fillStyle='#000'; c.fillRect(0,0,S.compW,S.compH);
+  const N = jobs.length; if (!N) return;
+  const T0 = 1, T1 = Math.max(T0+1, S.funDur - 4.5), seg = (T1-T0)/N;
+  const k = clamp(Math.floor((t-T0)/seg), 0, N-1), u = clamp((t-T0)/seg - k, 0, 1);
+  let placed = t < T0 ? 0 : t >= T1 ? N : k + (u >= 0.85 ? 1 : 0);
+  for (let i=0;i<placed;i++){ const j = jobs[i]; c.drawImage(cache, j.x, j.y, j.w, j.h, j.x, j.y, j.w, j.h); }
+  if (t >= T1){
+    const a = clamp((t - T1 - 0.8)/1.2, 0, 1);
+    if (a > 0){ c.save(); c.globalAlpha = a; renderNormal(c, t, true); c.restore(); }
+  }
+  const pos = i => { if (i < 0){ const j = jobs[0]; return { x:-j.H, y:j.ground, g:j.ground, H:j.H, dir:1 }; } const j = jobs[i]; return { x:j.gx, y:j.gy, g:j.ground, H:j.H, dir:j.dir }; };
+  if (t < T1){
+    const a = pos(k-1), b = pos(k), j = jobs[k];
+    let gx, gy, gg, H, dir = b.dir, walking=false, armsUp=true, carry=null;
+    if (t < T0 || u < 0.55){
+      const p = t < T0 ? 0 : ease(u/0.55);
+      gx = a.x + (b.x-a.x)*p; gy = a.y + (b.y-a.y)*p; gg = a.g + (b.g-a.g)*p; H = a.H + (b.H-a.H)*p;
+      if (Math.abs(b.x-a.x) > 1) dir = Math.sign(b.x-a.x);
+      walking = t >= T0 && p < 0.999;
+      carry = 'head';
+    } else { gx=b.x; gy=b.y; gg=b.g; H=b.H; if (u < 0.85) carry = 'fly'; else armsUp = false; }
+    if (t >= T0){
+      drawLift(c, gx, gy, gg, H);
+      const pw = H*0.5, ph = Math.min(pw * j.h/j.w, H*0.5), hx = gx - pw/2, hy = gy - H*1.04 - ph;
+      if (carry === 'head') drawPanel(c, j, hx, hy, pw, ph);
+      drawGoblin(c, gx, gy, H, dir, { walking, phase: t*13, armsUp: carry==='head' || (carry==='fly' && u<0.7) });
+      if (carry === 'fly'){ const q = ease((u-0.55)/0.3); drawPanel(c, j, hx+(j.x-hx)*q, hy+(j.y-hy)*q, pw+(j.w-pw)*q, ph+(j.h-ph)*q); }
+    }
+  } else {
+    const b = pos(N-1), dt = t - T1;
+    const jump = dt < 1.6 ? -Math.abs(Math.sin(dt*6))*14 : 0;
+    drawLift(c, b.x, b.y, b.g, b.H);
+    drawGoblin(c, b.x, b.y, b.H, b.dir, { happy:true, jump, armsUp: dt < 1.6, wave: dt >= 1.6 ? dt : 0 });
+    if (dt > 0.3) bubble(c, b.x, b.y - b.H*1.15, '¡Pantalla montada, jefe!', Math.max(16, b.H*0.17));
+  }
+  if (S.hud){
+    const sz = Math.max(12, S.compH*0.024);
+    c.save(); c.font = `500 ${sz}px ${FONT_M}`; c.textAlign='left'; c.textBaseline='bottom';
+    const txt = `${placed===N?'COMPLETADO':'MONTANDO'}  ${placed}/${N} MÓD · ${fmt(placed*S.modMW*S.modMH)} m²`;
+    const w = c.measureText(txt).width;
+    c.fillStyle='rgba(0,0,0,.7)'; c.fillRect(S.compW*0.012 - sz*0.4, S.compH - S.compH*0.015 - sz*1.5, w + sz*0.8, sz*1.5);
+    c.fillStyle='#F39320'; c.fillText(txt, S.compW*0.012, S.compH - S.compH*0.015 - sz*0.2); c.restore();
+  }
+}
+
+/* ---------- bucle ---------- */
+const dur = () => S.mode==='fun' ? S.funDur : S.videoDur;
+let last = performance.now(), recStart = 0, recorder = null;
+function frame(now){
+  const dt = (now-last)/1000; last = now;
+  if (R.recording){ R.t = (now - recStart)/1000; $('#recfill').style.width = clamp(R.t/dur()*100,0,100)+'%'; if (R.t >= dur()){ R.t = dur(); stopRec(); } R.dirty = true; }
+  else if (R.playing){ R.t = (R.t + dt) % dur(); R.dirty = true; }
+  else if (S.mode==='normal' && R.logo && R.logo.frames && R.logo.frames.length>1){ R.t = (R.t + dt) % dur(); R.dirty = true; }
+  if (R.dirty){
+    if (cv.width !== S.compW || cv.height !== S.compH){ cv.width = S.compW; cv.height = S.compH; sizeOverlay(); }
+    if (R.cacheDirty) buildCache();
+    if (S.mode==='fun') renderFun(ctx, R.t); else renderNormal(ctx, R.t, true);
+    R.dirty = false;
+    if (!scrubbing) $('#scrub').value = Math.round(R.t/dur()*1000);
+    if (R.playing || R.recording) faderDots.forEach((d,i)=>d.setAttribute('cy', (11 + Math.sin(R.t*2.2 + i*1.3)*7.5).toFixed(1)));
+    $('#tc').textContent = `${tc(R.t)} / ${tc(dur(),true)}`;
+    drawOverlay();
+  }
+  requestAnimationFrame(frame);
+}
+const tc = (s,short) => { const m = Math.floor(s/60), r = s - m*60; return short ? `${String(m).padStart(2,'0')}:${String(Math.round(r)).padStart(2,'0')}` : `${String(m).padStart(2,'0')}:${r.toFixed(1).padStart(4,'0')}`; };
+
+/* ---------- overlay de selección + arrastre ---------- */
+function sizeOverlay(){ const r = ov.getBoundingClientRect(), d = devicePixelRatio||1; ov.width = Math.max(1,Math.round(r.width*d)); ov.height = Math.max(1,Math.round(r.height*d)); drawOverlay(); }
+function drawOverlay(){
+  octx.clearRect(0,0,ov.width,ov.height);
+  const s = S.slices[R.sel]; if (!s || R.recording) return;
+  const k = ov.width / S.compW;
+  octx.strokeStyle = '#FBCB78'; octx.lineWidth = 2*(devicePixelRatio||1); octx.setLineDash([8,5]);
+  octx.strokeRect(s.x*k, s.y*k, s.w*k, s.h*k);
+}
+new ResizeObserver(sizeOverlay).observe(ov);
+let drag = null;
+const toComp = e => { const r = ov.getBoundingClientRect(); return { x:(e.clientX-r.left)/r.width*S.compW, y:(e.clientY-r.top)/r.height*S.compH }; };
+ov.addEventListener('pointerdown', e => {
+  if (R.recording) return;
+  const p = toComp(e);
+  let hit = -1; for (let i=S.slices.length-1;i>=0;i--){ const s=S.slices[i]; if (p.x>=s.x && p.x<=s.x+s.w && p.y>=s.y && p.y<=s.y+s.h){ hit=i; break; } }
+  selectSlice(hit);
+  if (hit>=0){ const s=S.slices[hit]; drag = { i:hit, dx:p.x-s.x, dy:p.y-s.y }; ov.setPointerCapture(e.pointerId); }
+});
+ov.addEventListener('pointermove', e => {
+  const p = toComp(e);
+  if (!drag){ ov.style.cursor = S.slices.some(s=>p.x>=s.x&&p.x<=s.x+s.w&&p.y>=s.y&&p.y<=s.y+s.h) ? 'grab' : 'default'; return; }
+  const s = S.slices[drag.i]; let x = p.x-drag.dx, y = p.y-drag.dy;
+  if (S.snap){ x = Math.round(x/S.modW)*S.modW; y = Math.round(y/S.modH)*S.modH; } else { x=Math.round(x); y=Math.round(y); }
+  s.x = x; s.y = y; ov.style.cursor='grabbing'; changed(false); updateSliceFields(drag.i);
+});
+const endDrag = () => { drag = null; };
+ov.addEventListener('pointerup', endDrag); ov.addEventListener('pointercancel', endDrag);
+
+/* ---------- lista de slices ---------- */
+function selectSlice(i){ R.sel = i; document.querySelectorAll('.slice').forEach((el,k)=>el.classList.toggle('sel', k===i)); drawOverlay(); if (i>=0) document.querySelectorAll('.slice')[i]?.scrollIntoView({block:'nearest'}); }
+function metaHtml(s){
+  const ow = s.cols*S.modW, oh = s.rows*S.modH;
+  let m = `Output ${ow}×${oh} px · ${fmt(s.cols*S.modMW)}×${fmt(s.rows*S.modMH)} m`;
+  if (!s.lock){ const fx = ow/s.w, fy = oh/s.h; if (Math.abs(fx-1)>0.005 || Math.abs(fy-1)>0.005) m += ` · <span class="warn">escala ×${fmt(fx)} / ×${fmt(fy)}</span>`; }
+  return m;
+}
+function renderList(){
+  const L = $('#sliceList'); L.innerHTML = '';
+  $('#sliceCount').textContent = `${S.slices.length} · ${S.slices.reduce((a,s)=>a+s.cols*s.rows,0)} mód`;
+  if (!S.slices.length){ L.innerHTML = '<p class="hint">Todavía no hay slices. Carga un SVG o añade una pantalla.</p>'; return; }
+  S.slices.forEach((s,i)=>{
+    syncSlice(s);
+    const el = document.createElement('div'); el.className = 'slice' + (i===R.sel?' sel':'');
+    const fields = s.lock
+      ? [['x','X'],['y','Y'],['cols','Col.'],['rows','Filas']]
+      : [['x','X'],['y','Y'],['w','Ancho'],['h','Alto'],['cols','Col.'],['rows','Filas']];
+    el.innerHTML = `<div class="head"><span class="sw" style="background:hsl(${hue(i)} 80% 55%)"></span>
+      <input type="text" id="sn${i}" value="${esc(s.name)}" aria-label="Nombre de la slice">
+      <button class="iconbtn" data-a="dup" title="Duplicar" aria-label="Duplicar">⧉</button>
+      <button class="iconbtn del" data-a="del" title="Eliminar" aria-label="Eliminar">✕</button></div>
+      <div class="grid4">${fields.map(([k,l])=>`<label class="f">${l}<input type="number" id="s${i}${k}" data-k="${k}" value="${Math.round(s[k]*100)/100}" ${k==='cols'||k==='rows'?'min="1"':''}></label>`).join('')}</div>
+      <div class="meta" id="sm${i}">${metaHtml(s)}</div>`;
+    el.addEventListener('focusin', ()=>{ if (R.sel!==i) selectSlice(i); });
+    el.querySelector('.head input').addEventListener('input', e=>{ s.name = e.target.value; changed(false); });
+    el.querySelectorAll('input[data-k]').forEach(inp=>inp.addEventListener('input', e=>{
+      const v = parseFloat(e.target.value); if (!isFinite(v)) return;
+      const k = e.target.dataset.k; s[k] = v; if (k==='cols'||k==='rows') s.auto = false;
+      changed(false); $('#sm'+i).innerHTML = metaHtml(s);
+    }));
+    el.querySelector('[data-a=dup]').onclick = ()=>{ const c = structuredClone(s); c.name += ' copia'; c.x += S.modW; c.y += S.modH; S.slices.splice(i+1,0,c); R.sel=i+1; changed(true); };
+    el.querySelector('[data-a=del]').onclick = ()=>{ S.slices.splice(i,1); R.sel=-1; changed(true); };
+    L.appendChild(el);
+  });
+}
+function updateSliceFields(i){ const s=S.slices[i]; ['x','y'].forEach(k=>{ const el=$('#s'+i+k); if (el) el.value=Math.round(s[k]); }); }
+
+/* ---------- importar SVG ---------- */
+function importSVG(text){
+  const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+  if (doc.querySelector('parsererror') || doc.documentElement.nodeName.toLowerCase() !== 'svg') throw new Error('El archivo no es un SVG válido.');
+  doc.querySelectorAll('script,foreignObject,iframe').forEach(n=>n.remove());
+  doc.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{ if (/^on/i.test(a.name) || /^\s*javascript:/i.test(a.value)) n.removeAttribute(a.name); }));
+  const holder = document.createElement('div'); holder.style.cssText = 'position:absolute;left:-200000px;top:0;visibility:hidden;pointer-events:none';
+  const svg = document.importNode(doc.documentElement, true);
+  holder.appendChild(svg); document.body.appendChild(holder);
+  try{
+    let vb = svg.viewBox && svg.viewBox.baseVal;
+    let W = vb && vb.width ? vb.width : parseFloat(svg.getAttribute('width')) || 1920;
+    let Hh = vb && vb.height ? vb.height : parseFloat(svg.getAttribute('height')) || 1080;
+    const ox = vb && vb.width ? vb.x : 0, oy = vb && vb.width ? vb.y : 0;
+    if (!(vb && vb.width)){ svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`); }
+    svg.setAttribute('width', W); svg.setAttribute('height', Hh);
+    const inv = svg.getScreenCTM().inverse();
+    const out = [];
+    svg.querySelectorAll('rect,polygon,polyline,path,ellipse,circle').forEach(el=>{
+      if (el.closest('defs,clipPath,mask,pattern,symbol,marker')) return;
+      const bb = el.getBBox(); if (bb.width*bb.height < 4) return;
+      const m = inv.multiply(el.getScreenCTM());
+      const pts = [[bb.x,bb.y],[bb.x+bb.width,bb.y],[bb.x,bb.y+bb.height],[bb.x+bb.width,bb.y+bb.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(m));
+      const x0 = Math.min(...pts.map(p=>p.x))-ox, y0 = Math.min(...pts.map(p=>p.y))-oy;
+      const x1 = Math.max(...pts.map(p=>p.x))-ox, y1 = Math.max(...pts.map(p=>p.y))-oy;
+      const title = el.querySelector('title')?.textContent;
+      let name = el.getAttribute('data-name') || title || el.getAttribute('inkscape:label') || el.id || el.parentElement?.getAttribute('data-name') || '';
+      name = name.replace(/_x([0-9a-f]{4})_/gi,(_,h)=>String.fromCharCode(parseInt(h,16))).replace(/_/g,' ').trim();
+      out.push({ x:Math.round(x0), y:Math.round(y0), w:Math.round(x1-x0), h:Math.round(y1-y0), name });
+    });
+    let res = out.filter((r,i)=>out.findIndex(q=>q.x===r.x&&q.y===r.y&&q.w===r.w&&q.h===r.h)===i);
+    if (res.length > 1) res = res.filter(r => !(r.w*r.h >= W*Hh*0.97));
+    if (!res.length) throw new Error('No he encontrado rectángulos ni formas en el SVG.');
+    S.compW = Math.round(W); S.compH = Math.round(Hh);
+    S.slices = res.map((r,i)=>({ name: r.name || `Slice ${i+1}`, x:r.x, y:r.y, w:r.w, h:r.h, cols:Math.max(1,Math.round(r.w/S.modW)), rows:Math.max(1,Math.round(r.h/S.modH)), lock:false, auto:true }));
+    R.sel = -1; fillInputs(); changed(true);
+    status(`SVG cargado: ${res.length} slices, composición ${S.compW}×${S.compH} px. Revisa columnas y filas de cada slice.`, 'okk');
+  } finally { holder.remove(); }
+}
+
+/* ---------- exportar ---------- */
+async function saveFile(name, data){
+  try{
+    const d = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+    if (d){
+      try{ await d.save({ filename:name, data }); toast(`Guardado: ${name}`); return; }
+      catch(e){ if (e && e.code==='declined'){ toast('Descarga cancelada'); return; } if (e && e.code==='rate_limited'){ toast('Ya hay una descarga pendiente de confirmar'); return; } if (e && !['unavailable','not_granted','capability_disabled','capability_removed'].includes(e.code)){ status(`No se pudo guardar el archivo (${e.code}).`, 'err'); return; } }
+    }
+  }catch{}
+  const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([data]));
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 10000);
+}
+function exportSVG(){
+  if (!S.slices.length){ toast('No hay slices para exportar'); return; }
+  const used = new Set();
+  const rects = S.slices.map((s,i)=>{ syncSlice(s);
+    let id = (s.name||`slice_${i+1}`).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9_-]+/g,'_') || `slice_${i+1}`;
+    if (/^[0-9-]/.test(id)) id = 's_'+id; let base=id, n=2; while (used.has(id)) id = `${base}_${n++}`; used.add(id);
+    return `  <rect id="${id}" data-name="${esc(s.name)}" x="${Math.round(s.x)}" y="${Math.round(s.y)}" width="${Math.round(s.w)}" height="${Math.round(s.h)}" fill="${hslHex(hue(i),70,45)}" stroke="#ffffff" stroke-width="2"><title>${esc(s.name)}</title></rect>`; });
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${S.compW}" height="${S.compH}" viewBox="0 0 ${S.compW} ${S.compH}">\n  <!-- Módulos ${S.modW}x${S.modH} px · ${S.modMW}x${S.modMH} m -->\n${rects.join('\n')}\n</svg>\n`;
+  saveFile(`output_${S.compW}x${S.compH}.svg`, new Blob([svg], {type:'image/svg+xml'}));
+}
+function exportPNG(){
+  if (R.cacheDirty) buildCache();
+  if (S.mode==='fun') renderFun(ctx,R.t); else renderNormal(ctx,R.t,true);
+  cv.toBlob(b=>{ if (b) saveFile(`test_pattern_${S.mode==='fun'?'divertido':'normal'}_${S.compW}x${S.compH}.png`, b); else status('No se pudo generar la imagen.','err'); }, 'image/png');
+}
+function pickMime(){
+  if (!('MediaRecorder' in window)) return null;
+  return ['video/mp4;codecs=avc1.640033','video/mp4;codecs=avc1.42E033','video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(m=>MediaRecorder.isTypeSupported(m)) || null;
+}
+function startRec(){
+  if (!S.slices.length){ toast('Añade alguna slice primero'); return; }
+  const mime = pickMime();
+  if (!mime || !cv.captureStream){ status('Este navegador no puede grabar vídeo desde la página. Prueba con Chrome o Edge actualizados.', 'err'); return; }
+  if (/mp4/.test(mime) && (S.compW > 4096 || S.compH > 2304)) status('Aviso: por encima de 4096×2304 el códec H.264 del navegador puede fallar. Si el vídeo sale vacío, divide la composición.', '');
+  const stream = cv.captureStream(S.fps);
+  const bps = Math.min(80e6, Math.max(8e6, S.compW*S.compH*S.fps*0.25));
+  let chunks = [];
+  try { recorder = new MediaRecorder(stream, { mimeType:mime, videoBitsPerSecond:bps }); }
+  catch(e){ status('No se pudo iniciar la grabación: '+e.message, 'err'); return; }
+  recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const ext = /mp4/.test(mime) ? 'mp4' : 'webm';
+    const blob = new Blob(chunks, { type: mime.split(';')[0] });
+    status(`Vídeo listo (${ext.toUpperCase()}, ${(blob.size/1048576).toFixed(1)} MB).${ext==='webm'?' Resolume no abre WebM: conviértelo con Alley.':''}`, 'okk');
+    saveFile(`test_pattern_${S.mode==='fun'?'divertido':'normal'}_${S.compW}x${S.compH}.${ext}`, blob);
+    stream.getTracks().forEach(t=>t.stop());
+  };
+  R.cacheDirty = true; buildCache();
+  R.recording = true; R.playing = false; R.t = 0; recStart = performance.now(); R.dirty = true;
+  recorder.start(500);
+  $('#recDot').classList.add('on'); $('#monLabel').textContent = 'GRABANDO'; $('#recbar').hidden = false; $('#recfill').style.width='0';
+  setBusy(true); status(`Grabando ${dur()} s a ${S.fps} fps… no cambies de pestaña.`);
+}
+function stopRec(){
+  R.recording = false;
+  setTimeout(()=>{ try{ recorder && recorder.state!=='inactive' && recorder.stop(); }catch{} }, 120);
+  $('#recDot').classList.remove('on'); $('#monLabel').textContent = 'OUTPUT'; $('#recbar').hidden = true; setBusy(false);
+}
+function setBusy(b){ ['#recVideo','#dlPng','#dlSvg','#dlSvg2','#play','#mNormal','#mFun'].forEach(s=>$(s).disabled=b); }
+
+/* ---------- controles ---------- */
+const numKeys = ['compW','compH','modW','modH','modMW','modMH','funDur','videoDur'];
+function fillInputs(){
+  numKeys.forEach(k=>$('#'+k).value = S[k]);
+  $('#fps').value = String(S.fps);
+  [['snap','snap'],['oGrid','grid'],['oNums','nums'],['oDiag','diag'],['oCircle','circle'],['oInfo','info'],['oSweep','sweep'],['hud','hud']].forEach(([id,k])=>$('#'+id).checked = !!S[k]);
+  $('#nameSize').value = S.nameSize; $('#logoSize').value = S.logoSize;
+  updateLabels(); setSource(S.source, true); setMode(S.mode, true);
+}
+function updateLabels(){
+  $('#nameSizeO').value = S.nameSize + '%'; $('#logoSizeO').value = S.logoSize + '%';
+  const n = S.slices.reduce((a,s)=>a+s.cols*s.rows,0);
+  $('#compLabel').textContent = `${S.compW}×${S.compH} px · ${n} módulos · ${fmt(n*S.modMW*S.modMH)} m²`;
+  $('#sliceCount').textContent = `${S.slices.length} · ${n} mód`;
+}
+numKeys.forEach(k=>$('#'+k).addEventListener('input', e=>{
+  const v = parseFloat(e.target.value); if (!isFinite(v) || v<=0) return;
+  S[k] = ['compW','compH','modW','modH'].includes(k) ? Math.round(v) : v;
+  if (k==='modW'||k==='modH') S.slices.forEach(s=>{ if (!s.lock && s.auto){ s.cols=Math.max(1,Math.round(s.w/S.modW)); s.rows=Math.max(1,Math.round(s.h/S.modH)); } });
+  if (k==='funDur'||k==='videoDur') R.t = Math.min(R.t, dur());
+  changed(['modW','modH','modMW','modMH'].includes(k));
+}));
+$('#fps').onchange = e => { S.fps = +e.target.value; persist(); };
+[['snap','snap'],['oGrid','grid'],['oNums','nums'],['oDiag','diag'],['oCircle','circle'],['oInfo','info'],['oSweep','sweep'],['hud','hud']].forEach(([id,k])=>$('#'+id).addEventListener('change', e=>{ S[k]=e.target.checked; changed(false); }));
+$('#nameSize').oninput = e => { S.nameSize = +e.target.value; changed(false); };
+$('#logoSize').oninput = e => { S.logoSize = +e.target.value; changed(false); };
+
+function setSource(src, silent){ S.source = src; $('#srcSvg').setAttribute('aria-pressed', src==='svg'); $('#srcBuild').setAttribute('aria-pressed', src==='build'); $('#paneSvg').hidden = src!=='svg'; $('#paneBuild').hidden = src!=='build'; if (!silent) persist(); }
+$('#srcSvg').onclick = () => setSource('svg'); $('#srcBuild').onclick = () => setSource('build');
+function setMode(m, silent){ S.mode = m; $('#mNormal').setAttribute('aria-pressed', m==='normal'); $('#mFun').setAttribute('aria-pressed', m==='fun'); R.t = 0; R.dirty = true; if (!silent){ persist(); if (m==='fun' && !R.playing) togglePlay(true); } }
+$('#mNormal').onclick = () => setMode('normal'); $('#mFun').onclick = () => setMode('fun');
+
+$('#addSlice').onclick = () => {
+  const cols = Math.max(1, parseInt($('#addCols').value)||1), rows = Math.max(1, parseInt($('#addRows').value)||1);
+  let x = 0, y = 0;
+  if (S.slices.length){ const l = S.slices[S.slices.length-1]; syncSlice(l); x = l.x + l.w + S.modW; y = l.y; if (x + cols*S.modW > S.compW){ x = 0; y = Math.max(...S.slices.map(s=>s.y+s.h)) + S.modH; } }
+  S.slices.push({ name: $('#addName').value.trim() || `Pantalla ${S.slices.length+1}`, x, y, cols, rows, lock:true });
+  R.sel = S.slices.length-1; changed(true);
+  if (x + cols*S.modW > S.compW || y + rows*S.modH > S.compH) toast('La pantalla se sale de la composición: pulsa «Ajustar composición» o muévela.');
+};
+$('#fitComp').onclick = () => { if (!S.slices.length) return; S.slices.forEach(syncSlice);
+  const minX = Math.min(...S.slices.map(s=>s.x)), minY = Math.min(...S.slices.map(s=>s.y));
+  S.slices.forEach(s=>{ s.x -= minX; s.y -= minY; });
+  S.compW = Math.round(Math.max(...S.slices.map(s=>s.x+s.w))); S.compH = Math.round(Math.max(...S.slices.map(s=>s.y+s.h)));
+  fillInputs(); changed(true); };
+$('#dlSvg').onclick = exportSVG; $('#dlSvg2').onclick = exportSVG;
+$('#dlPng').onclick = exportPNG; $('#recVideo').onclick = startRec;
+
+function togglePlay(force){ R.playing = typeof force==='boolean' ? force : !R.playing; $('#play').textContent = R.playing ? '❚❚ Pausa' : '▶ Reproducir'; R.dirty = true; }
+$('#play').onclick = () => togglePlay();
+let scrubbing = false;
+$('#scrub').addEventListener('input', e=>{ scrubbing = true; R.t = e.target.value/1000*dur(); R.dirty = true; });
+$('#scrub').addEventListener('change', ()=>{ scrubbing = false; });
+$('#fs').onclick = () => { const w = $('#wrap'); (w.requestFullscreen ? w.requestFullscreen() : Promise.reject()).catch(()=>toast('La pantalla completa no está disponible aquí')); };
+
+function wireDrop(zone, input, handler){
+  zone.onclick = () => input.click();
+  zone.onkeydown = e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); input.click(); } };
+  input.onchange = () => { if (input.files[0]) handler(input.files[0]); input.value=''; };
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('over'); });
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('over'));
+  zone.addEventListener('drop', e=>{ e.preventDefault(); zone.classList.remove('over'); const f = e.dataTransfer.files[0]; if (f) handler(f); });
+}
+wireDrop($('#dropSvg'), $('#fileSvg'), async f => { try { importSVG(await f.text()); } catch(e){ status(e.message, 'err'); } });
+wireDrop($('#dropLogo'), $('#fileLogo'), loadLogo);
+const faderDots = [...document.querySelectorAll('#faders circle')];
+async function useMonogram(color, label){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1296" height="852" viewBox="-6 0 432 284"><defs><clipPath id="c"><rect x="-10" y="-20" width="450" height="302"/></clipPath></defs><g clip-path="url(#c)" fill="none" stroke="${color}" stroke-width="17" stroke-linejoin="bevel"><polyline points="1,300 145,10 287,300"/><polyline points="133,300 275,10 418,300"/><line x1="30" y1="230" x2="390" y2="230"/></g></svg>`;
+  const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  try { await img.decode(); } catch { toast('No se pudo cargar el monograma'); return; }
+  R.logo = { img, name:'Monograma AA', w:1296, h:852, frames:null, total:0 };
+  $('#logoTitle').textContent = `Monograma AA · ${label}`; $('#logoSub').textContent = 'ISAACRAMIREZD AV DESIGN';
+  $('#rmLogo').hidden = false; changed(false);
+}
+$('#aaOrange').onclick = () => useMonogram('#F39320', 'naranja');
+$('#aaWhite').onclick = () => useMonogram('#FFFFFF', 'blanco');
+$('#rmLogo').onclick = () => { R.logo = null; $('#logoTitle').textContent='Añadir logo'; $('#logoSub').textContent='JPG, PNG o GIF animado · aparece en el centro de cada slice'; $('#rmLogo').hidden = true; changed(false); };
+
+fillInputs(); renderList();
+document.fonts && document.fonts.load(`800 40px "Montserrat"`).then(()=>document.fonts.load(`500 20px "JetBrains Mono"`)).finally(()=>{ R.cacheDirty = true; R.dirty = true; });
+requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
